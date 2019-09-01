@@ -19,7 +19,7 @@ c:\>pip install tensorflow
 ![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E6%95%B8%E6%B5%81%E5%9C%96.gif)
 
 ## **實例**
-	
+```python	
 	import tensorflow as tf
 	import numpy as np
 
@@ -47,6 +47,7 @@ c:\>pip install tensorflow
 		session.run(train)
 		if step%20==0:
 			print(step,sess.run(Weights),sess.run(biases))
+```			
 ## **Session**
 Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和執行者之間的媒介，首先透過Session來啟動圖，而Session.run()是用來進行操作的，Session再使用完過後需要透過close來釋放資源，或是透過with as的方式來讓他自動釋放。
 	
