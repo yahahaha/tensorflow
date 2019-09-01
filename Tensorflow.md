@@ -87,3 +87,37 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 		for _ in range(3):
 			sess.run(update)
 			print(sess.run(state))
+
+## **Placeholder**
+我們可以將它想成是一個佔有長度卻沒有初始值的None，差異在於None不需要將資料類型事先定義，但是Placeholder必須事先定義好之後要輸入的資料類型與外觀。
+	
+	import tensorflow as tf
+
+	input1=tf.placeholder(tf.float32)    #先定義好之後要輸入的資料類型，tf.placeholder(dtype,shape=None,name=None)
+	input2=tf.placeholder(tf.float32)
+
+	output=tf.mul(input1,input2)
+
+	with tf.Session() as sess:
+		print(sess.run(output,feed_dict={input1:[7.],input2:[2.]}))    #將資料以python dict餵進(feed)Placeholder之中，print出來的結果為[14.]
+
+## **激勵函數Activation Function**
+在類神經網路中使用激勵函數，主要是利用非線性方程式，解決非線性問題，若不使用激勵函數，類神經網路即是以線性的方式組合運算，因為隱藏層以及輸出層皆是將上層之結果輸入，並以線性組合計算，作為這一層的輸出，使得輸出與輸入只存在著線性關係，而現實中，所有問題皆屬於非線性問題，因此，若無使用非線性之激勵函數，則類神經網路訓練出之模型便失去意義。  
+1.激勵函數需選擇可微分之函數，因為在誤差反向傳遞(Back Propagation)運算時，需要進行一次微分計算。  
+2.在深度學習中，當隱藏層之層數過多時，激勵函數不可隨意選擇，因為會造成梯度消失(Vanishing Gradient)以及梯度爆炸(Exploding gradients)等問題。  
+常見的激勵函數的選擇有sigmoid，tanh，ReLU，實用上最常使用ReLU。
+
+##**例子-def add_layer()**
+	
+	import tensorflow as tf
+	import numpy as np
+	import matplotlib.pyplot as plt
+	def add_layer(inputs,in_size,out_size,activation_function=None):     #add_layer(輸入值,輸入的大小,輸出的大小,激勵函數)
+		Weights=tf.Variable(tf.random_normal([in_size,out_size]))    #在生成初始參數時，隨機變量(normal distribution)會比全部為0要好很多，所以這裡的Weights為一個in_size行，out_size列的隨機變量矩陣。
+		biases=tf.Variable(tf.zeros([1,out_size])+0.1)               #在機器學習中，biases推薦的初始值不為零，所以+0.1
+		Wx_plus_b=tf.matmul(inputs,Weights)+biases		
+		if activation_function is None:				     #當activation_function為None時(非線性函數)，輸出就是當前的預測值Wx_plus_b，不為None時，就會把Wx_plus_b傳到activation_function()函數中得到輸出。
+			outputs=Wx_plus_b
+		else:
+			outputs=activation_function(Wx_plus_b)
+		return outputs
