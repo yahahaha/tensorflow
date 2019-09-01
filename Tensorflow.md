@@ -67,6 +67,23 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 		print(result2)
 ## **Variable**
 將值宣告賦值給變數（Variables）讓使用者能夠動態地進行相同的計算來得到不同的結果，在TensorFlow中是以tf.Variable()來完成。  
-在TensorFlow的觀念之中，宣告變數張量並不如Python那麼單純，它需要兩個步驟：
-1.宣告變數張量的初始值、類型與外觀 
+在TensorFlow的觀念之中，宣告變數張量並不如Python那麼單純，它需要兩個步驟：  
+1.宣告變數張量的初始值、類型與外觀   
 2.初始化變數張量
+	
+	import tensorflow as tf
+
+	state=tf.Variable(0,name='counter')
+	#print(state.name)        #print出來的結果為counter:0
+	one=tf.constant(1)
+
+	new_value=tf.add(state,one)
+	update=tf.assign(state,new_value)    #可以透過tf.assign()賦予不同的值，值得注意的地方是對變數張量重新賦值這件事對tensorflow來說也算是一個運算，必須在宣告之後放入Session中執行，否則重新賦值並不會有作用。
+										
+	init=tf.initialize_all_variables()   #must have if define variable
+
+	with tf.Session() as sess:
+		sess.run(init)
+		for _ in range(3):
+			sess.run(update)
+			print(sess.run(state))
