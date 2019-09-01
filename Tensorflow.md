@@ -161,7 +161,7 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 				lines=ax.plot(x_data,prediction_value,'r-',lw=5)	#紅色，寬度為5
 				plt.pause(0.1)	    #暫停0.1s
 
-## ***神經網路學習的優化(speed up training)**	
+## **神經網路學習的優化(speed up training)**	
 ### 梯度下降法(gradient descent，GD)
 梯度下降法是一種不斷去更新參數找「解」的方法，所以一定要先隨機產生一組初始參數的「解」，然後根據這組隨機產生的「解」開始算此「解」的梯度方向大小，然後將這個「解」去減去梯度方向，公式如下:  (t是第幾次更新參數，γ是學習率(Learning rate)，一次要更新多少，就是由學習率來控制的)  
 參考:https://medium.com/@chih.sheng.huang821/%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92-%E5%9F%BA%E7%A4%8E%E6%95%B8%E5%AD%B8-%E4%BA%8C-%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95-gradient-descent-406e1fd001f
