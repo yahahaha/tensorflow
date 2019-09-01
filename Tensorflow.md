@@ -165,7 +165,8 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 ```
 ## **神經網路學習的優化(speed up training)**	
 ### 梯度下降法(gradient descent，GD)
-梯度下降法是一種不斷去更新參數找「解」的方法，所以一定要先隨機產生一組初始參數的「解」，然後根據這組隨機產生的「解」開始算此「解」的梯度方向大小，然後將這個「解」去減去梯度方向，公式如下:  (t是第幾次更新參數，γ是學習率(Learning rate)，一次要更新多少，就是由學習率來控制的)  
+梯度下降法是一種不斷去更新參數找「解」的方法，所以一定要先隨機產生一組初始參數的「解」，然後根據這組隨機產生的「解」開始算此「解」的梯度方向大小，然後將這個「解」去減去梯度方向，公式如下: ![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E5%85%AC%E5%BC%8F.PNG)  
+(t是第幾次更新參數，γ是學習率(Learning rate)，一次要更新多少，就是由學習率來控制的)  
 參考:https://medium.com/@chih.sheng.huang821/%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92-%E5%9F%BA%E7%A4%8E%E6%95%B8%E5%AD%B8-%E4%BA%8C-%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95-gradient-descent-406e1fd001f
 http://ruder.io/optimizing-gradient-descent/index.html#adam
 ### 隨機梯度下降法(stochastic Gradient Descent,SGD)	
@@ -402,7 +403,7 @@ Weight decay的方式就是在loss function (損失函數)加入參數權重的L
 如果使用傳統的深度學習網路(例如全連接層)來識別圖像，那麼原本是二維的圖片就必須先打散成一維，然後再將每個像素視為一個特徵值丟入DNN架構進行分析，因此這些輸入的像素已經丟失了原有的空間排列資訊。然而CNN的Convolution layer的目的就是在保留圖像的空間排列並取得局部圖像作為輸入特徵。  
 卷積運算就是將原始圖片的與特定的Feature Detector(filter)做卷積運算，卷積運算就是將下圖兩個3x3的矩陣作相乘後再相加，以下圖為例
 ![image](https://github.com/yahahaha/tensorflow/blob/master/img/Convolutional%20layer.PNG)
-0x0+0x0+0x1+0x1+1x0+0x0+0x0+0x1+0x1=0    
+0 x 0 + 0 x 0 + 0 x 1 + 0 x 1 + 1 x 0 + 0 x 0 + 0 x 0 + 0 x 1 + 0 x 1 = 0      
 依序做完整張表
 ![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E4%BE%9D%E5%BA%8F%E5%81%9A%E5%AE%8C%E6%95%B4%E5%BC%B5%E8%A1%A8.PNG)
 中間的Feature Detector(Filter)會隨機產生好幾種(ex:16種)，Feature Detector的目的就是幫助我們萃取出圖片當中的一些特徵(ex:形狀)，就像人的大腦在判斷這個圖片是什麼東西也是根據形狀來推測  
