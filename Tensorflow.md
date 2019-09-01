@@ -247,6 +247,6 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/518746/
 			if i%50==0:
 				<font color="#dd0000">result=sess.run(merged,feed_dict={xs:x_data,ys:y_data}))
 				writer.add_summary(result,i)</font><br /> 	
-	存檔後開啟terminal，移動到檔案目錄後輸入tensorboard --logdir='logs/' 
+	#存檔後開啟terminal，移動到檔案目錄後輸入tensorboard --logdir='logs/' 
 	複製網址，在網址列上貼上搜尋
 ```
