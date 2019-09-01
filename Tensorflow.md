@@ -4,7 +4,7 @@ TensorFlow 是 Google透過使用資料流 (flow) 圖像，來進行數值演算
 ## **Tensorflow安裝**  
 ### MacOS/Linux安裝  
 用pip安裝(需先確認電腦中已安裝了pip。若電腦中已安裝了python3.X，因為pip已經自帶在python的模組裡，因此pip也已安裝了)  
-####CPU版本  
+#### CPU版本  
 開啟terminal    
 #python2.X  
 $pip install tensorflow  
