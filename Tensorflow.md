@@ -315,3 +315,100 @@ Weight decay的方式就是在loss function (損失函數)加入參數權重的L
 
 ### Dropout
 在訓練的時候，隨機忽略掉一些神經元和神經聯結 ，使這個神經網絡變得”不完整”，然後用一個不完整的神經網絡訓練一次。到第二次再隨機忽略另一些, 變成另一個不完整的神經網絡。有了這些隨機drop掉的規則, 每一次預測結果都不會依賴於其中某部分特定的神經元。Dropout的方法就是一邊"隨機”消除神經元，一邊訓練的方法。
+
+## **用dropout解決overfitting**
+```python	
+	from __future__ import print_function   #如果某個版本中出現了某個新的功能特性，而且這個特性和當前版本中使用的不相容，也就是它在該版本中不是語言標準，那麼我如果想要使用的話就需要從future模組匯入。 python2.X中print不需要括號，而在python3.X中則需要。
+	import tensorflow as tf
+	from sklearn.datasets import load_digits   #利用 Python 的機器學習套件 scikit-learn 將一個叫作 digits 的資料讀入。
+	from sklearn.model_selection import train_test_split   #隨機劃分訓練集和測試集
+	from sklearn.preprocessing import LabelBinarizer   #對於分類和文字屬性，需要將其轉換為離散的數值特徵才能餵給機器學習演算法。preprocessing.LabelBinarizer是一個很好用的工具，比如可以把yes和no轉化為0和1，或是把incident和normal轉化為0和1
+
+	# load data
+	digits = load_digits()
+	X = digits.data
+	y = digits.target
+	y = LabelBinarizer().fit_transform(y)  #標準化
+	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3)
+
+
+	def add_layer(inputs, in_size, out_size, layer_name, activation_function=None, ):
+    		# add one more layer and return the output of this layer
+    		Weights = tf.Variable(tf.random_normal([in_size, out_size]))
+    		biases = tf.Variable(tf.zeros([1, out_size]) + 0.1, )
+    		Wx_plus_b = tf.matmul(inputs, Weights) + biases
+    		
+		# here to dropout
+    		Wx_plus_b = tf.nn.dropout(Wx_plus_b, keep_prob)
+    		if activation_function is None:
+        		outputs = Wx_plus_b
+    		else:
+        		outputs = activation_function(Wx_plus_b, )
+    		tf.summary.histogram(layer_name + '/outputs', outputs)
+    		return outputs
+
+
+	# define placeholder for inputs to network
+	keep_prob = tf.placeholder(tf.float32)
+	xs = tf.placeholder(tf.float32, [None, 64])  # 8x8
+	ys = tf.placeholder(tf.float32, [None, 10])
+
+	# add output layer
+	l1 = add_layer(xs, 64, 50, 'l1', activation_function=tf.nn.tanh)
+	prediction = add_layer(l1, 50, 10, 'l2', activation_function=tf.nn.softmax)
+
+	# the loss between prediction and real data
+	cross_entropy = tf.reduce_mean(-tf.reduce_sum(ys * tf.log(prediction),reduction_indices=[1]))  # loss
+	tf.summary.scalar('loss', cross_entropy)
+	train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+
+	sess = tf.Session()
+	merged = tf.summary.merge_all()
+	# summary writer goes in here
+	train_writer = tf.summary.FileWriter("logs/train", sess.graph)
+	test_writer = tf.summary.FileWriter("logs/test", sess.graph)
+
+	# tf.initialize_all_variables() no long valid from
+	# 2017-03-02 if using tensorflow >= 0.12
+	if int((tf.__version__).split('.')[1]) < 12 and int((tf.__version__).split('.')[0]) < 1:
+    		init = tf.initialize_all_variables()
+	else:
+    		init = tf.global_variables_initializer()
+		sess.run(init)
+		for i in range(500):
+    			# here to determine the keeping probability
+    			sess.run(train_step, feed_dict={xs: X_train, ys: y_train, keep_prob: 0.5})
+    			if i % 50 == 0:
+        			# record loss
+        			train_result = sess.run(merged, feed_dict={xs: X_train, ys: y_train, keep_prob: 1})
+        			test_result = sess.run(merged, feed_dict={xs: X_test, ys: y_test, keep_prob: 1})
+        			train_writer.add_summary(train_result, i)
+        			test_writer.add_summary(test_result, i)
+```
+## **甚麼是卷積神經網路Convolutional Neural Networks(CNN)** 
+傳統的DNN（即Deep neural network，泛指一般的深度學習網路）最大問題在於它會忽略資料的形狀。例如，輸入影像的資料時，該data通常包含了水平、垂直、color channel等三維資訊，但傳統DNN的輸入處理必須是平面的、也就是須一維的資料。舉例用DNN來分類MNIST手寫數字集？其影像資訊是水平28 pixels、垂直28 pixels、color channel=1，即(1, 28, 28)的形狀，但輸入DNN時，所有dataset必須轉為一維，欄位數為784的dataset。  	
+因此，若去除了這些形狀資訊，就代表失去了一些重要的空間資料，像不同影像但類似的空間可能有著相似的像素值，RGB不同的channel之間也可能具有某些關連性、而遠近不同的像素彼此也應具有不同的關聯性，而這些資訊只有在三維形狀中才能保留下來。  
+因此，Deep learning中的CNN較傳統的DNN多了Convolutional（卷積）及池化（Pooling） 兩層layer，用以維持形狀資訊並且避免參數大幅增加。在加入此兩層後，我們所看到的架構就如下圖分別有兩層的卷積和池化層，以及一個全連結層（即傳統的DNN），最後再使用Softmax activation function來輸出分類結果。
+簡單來說，圖片經過各兩次的Convolution, Pooling, Fully Connected就是CNN的架構了。      
+	
+### Convolutional layer卷積層
+如果使用傳統的深度學習網路(例如全連接層)來識別圖像，那麼原本是二維的圖片就必須先打散成一維，然後再將每個像素視為一個特徵值丟入DNN架構進行分析，因此這些輸入的像素已經丟失了原有的空間排列資訊。然而CNN的Convolution layer的目的就是在保留圖像的空間排列並取得局部圖像作為輸入特徵。  
+卷積運算就是將原始圖片的與特定的Feature Detector(filter)做卷積運算，卷積運算就是將下圖兩個3x3的矩陣作相乘後再相加，以下圖為例 
+0*0 + 0*0 + 0*1+ 0*1 + 1 *0 + 0*0 + 0*0 + 0*1 + 0*1 =0    
+依序做完整張表  	
+中間的Feature Detector(Filter)會隨機產生好幾種(ex:16種)，Feature Detector的目的就是幫助我們萃取出圖片當中的一些特徵(ex:形狀)，就像人的大腦在判斷這個圖片是什麼東西也是根據形狀來推測     
+然而如果我們輸入的是三層的RGB圖像而非單層的灰階呢？或是想要使用多個Feature Detector(filter)來取得不同的特徵，那麼就需要在同一卷積層中定義多個Feature Detector(filter)，此時Feature Detector(filter)的數量就代表其Feature Detector(filter)的維度。當Feature Detector(filter)維度愈大，代表使用的Feature Detector(filter)種類愈多提取的圖像特徵也就越多，圖像識別的能力也就更好。  
+	
+### Pooling Layer 池化層
+Pooling layer稱為池化層，它的功能很單純，就是將輸入的圖片尺寸縮小（大部份為縮小一半）以減少每張feature map維度並保留重要的特徵，其好處有：  
+1.減少後續layer需要參數，加快系統運作的效率。  
+2.具有抗干擾的作用：圖像中某些像素在鄰近區域有微小偏移或差異時，對Pooling layer的輸出影響不大，結果仍是不變的。  
+3.減少過度擬合over-fitting的情況。    
+與卷積層相同，池化層會使用Feature Detector(filter)來取出各區域的值並運算，但最後的輸出並不透過Activate function（卷積層使用的function是ReLU）。另外，池化層用來縮小圖像尺寸的作法主要有三種：最大化（Max-Pooling）、平均化（Mean-Pooling）、隨機（Stochastic-Pooling）…等，以Max-pooling為例，作法說明如下：
+
+### Full connected layer
+Full connected layer指的就是一般的神經網路，基本上全連接層的部分就是將之前的結果平坦化之後接到最基本的神經網絡了。  
+可以看出池化層減少了圖素的參數數量，卻保留了所有重要的特徵資訊，對於CNN的運作效率增進不少。
+
+
+
