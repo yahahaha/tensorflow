@@ -172,7 +172,8 @@ http://ruder.io/optimizing-gradient-descent/index.html#adam
 在更新參數的時候，GD我們是一次用全部訓練集的數據去計算損失函數的梯度就更新一次參數。SGD就是一次跑一個樣本或是小批次(mini-batch)樣本然後算出一次梯度或是小批次梯度的平均後就更新一次，那這個樣本或是小批次的樣本是隨機抽取的，所以才會稱為隨機梯度下降法。  
 SGD缺點:在當下的問題如果學習率太大，容易造成參數更新呈現鋸齒狀的更新，這是很沒有效率的路徑。
 ### Momentum
-公式: (t是第幾次更新參數，γ是學習率(Learning rate)，m是momentum項(一般設定為0.9))，主要是用在計算參數更新方向前會考慮前一次參數更新的方向(v(t-1))，如果當下梯度方向和歷史參數更新的方向一致，則會增強這個方向的梯度，若當下梯度方向和歷史參數更新的方向不一致，則梯度會衰退。然後每一次對梯度作方向微調。這樣可以增加學習上的穩定性(梯度不更新太快)，這樣可以學習的更快，並且有擺脫局部最佳解的能力。
+公式: ![image](https://github.com/yahahaha/tensorflow/blob/master/img/Momentum.PNG) 
+(t是第幾次更新參數，γ是學習率(Learning rate)，m是momentum項(一般設定為0.9))，主要是用在計算參數更新方向前會考慮前一次參數更新的方向(v(t-1))，如果當下梯度方向和歷史參數更新的方向一致，則會增強這個方向的梯度，若當下梯度方向和歷史參數更新的方向不一致，則梯度會衰退。然後每一次對梯度作方向微調。這樣可以增加學習上的穩定性(梯度不更新太快)，這樣可以學習的更快，並且有擺脫局部最佳解的能力。
 ### AdaGrad
 SGD和momentum在更新參數時，都是用同一個學習率(γ)，Adagrad算法則是在學習過程中對學習率不斷的調整，這種技巧叫做「學習率衰減(Learning rate decay)」。通常在神經網路學習，一開始會用大的學習率，接著在變小的學習率。大的學習率可以較快走到最佳值或是跳出局部極值，但越後面到要找到極值就需要小的學習率。Adagrad則是針對每個參數客制化的值，這邊假設 g_t,i為第t次第i個參數的梯度，(ε是平滑項，主要避免分母為0的問題，一般設定為1e-7。Gt這邊定義是一個對角矩陣，對角線每一個元素是相對應每一個參數梯度的平方和。)  
 Adagrad缺點是在訓練中後段時，有可能因為分母累積越來越大(因為是從第1次梯度到第t次梯度的和)導致梯度趨近於0，如果有設定early stop的，會使得訓練提前結束。early stop:在訓練中計算模型的表現開始下降的時候就會停止訓練。
@@ -389,11 +390,13 @@ Weight decay的方式就是在loss function (損失函數)加入參數權重的L
 傳統的DNN（即Deep neural network，泛指一般的深度學習網路）最大問題在於它會忽略資料的形狀。例如，輸入影像的資料時，該data通常包含了水平、垂直、color channel等三維資訊，但傳統DNN的輸入處理必須是平面的、也就是須一維的資料。舉例用DNN來分類MNIST手寫數字集？其影像資訊是水平28 pixels、垂直28 pixels、color channel=1，即(1, 28, 28)的形狀，但輸入DNN時，所有dataset必須轉為一維，欄位數為784的dataset。  	
 因此，若去除了這些形狀資訊，就代表失去了一些重要的空間資料，像不同影像但類似的空間可能有著相似的像素值，RGB不同的channel之間也可能具有某些關連性、而遠近不同的像素彼此也應具有不同的關聯性，而這些資訊只有在三維形狀中才能保留下來。  
 因此，Deep learning中的CNN較傳統的DNN多了Convolutional（卷積）及池化（Pooling） 兩層layer，用以維持形狀資訊並且避免參數大幅增加。在加入此兩層後，我們所看到的架構就如下圖分別有兩層的卷積和池化層，以及一個全連結層（即傳統的DNN），最後再使用Softmax activation function來輸出分類結果。
-簡單來說，圖片經過各兩次的Convolution, Pooling, Fully Connected就是CNN的架構了。      
+簡單來說，圖片經過各兩次的Convolution, Pooling, Fully Connected就是CNN的架構了。 
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/CNN%E6%9E%B6%E6%A7%8B.PNG)
 	
 ### Convolutional layer卷積層
 如果使用傳統的深度學習網路(例如全連接層)來識別圖像，那麼原本是二維的圖片就必須先打散成一維，然後再將每個像素視為一個特徵值丟入DNN架構進行分析，因此這些輸入的像素已經丟失了原有的空間排列資訊。然而CNN的Convolution layer的目的就是在保留圖像的空間排列並取得局部圖像作為輸入特徵。  
-卷積運算就是將原始圖片的與特定的Feature Detector(filter)做卷積運算，卷積運算就是將下圖兩個3x3的矩陣作相乘後再相加，以下圖為例 
+卷積運算就是將原始圖片的與特定的Feature Detector(filter)做卷積運算，卷積運算就是將下圖兩個3x3的矩陣作相乘後再相加，以下圖為例
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/Convolutional%20layer.PNG)
 0*0 + 0*0 + 0*1+ 0*1 + 1 *0 + 0*0 + 0*0 + 0*1 + 0*1 =0    
 依序做完整張表  	
 中間的Feature Detector(Filter)會隨機產生好幾種(ex:16種)，Feature Detector的目的就是幫助我們萃取出圖片當中的一些特徵(ex:形狀)，就像人的大腦在判斷這個圖片是什麼東西也是根據形狀來推測  
