@@ -48,3 +48,19 @@ c:\>pip install tensorflow
 			print(step,sess.run(Weights),sess.run(biases))
 ## **Session**
 Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和執行者之間的媒介，首先透過Session來啟動圖，而Session.run()是用來進行操作的，Session再使用完過後需要透過close來釋放資源，或是透過with as的方式來讓他自動釋放。
+	import tensorflow as tf
+
+	matrix1=tf.constant([[3,3]])         #Constant就是不可變的常數
+	matrix2=tf.constant([[2],[2]])
+	product=tf.matmul(matrix1,matrix2)
+
+	#method 1
+	session=tf.Session()
+	result=sess.run(product)
+	print(result)
+	sess.close()
+
+	#method 2
+	with tf.Session() as sess:
+		result2= sess.run(product)
+		print(result2)
