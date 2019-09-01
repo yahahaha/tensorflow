@@ -402,7 +402,7 @@ Weight decay的方式就是在loss function (損失函數)加入參數權重的L
 如果使用傳統的深度學習網路(例如全連接層)來識別圖像，那麼原本是二維的圖片就必須先打散成一維，然後再將每個像素視為一個特徵值丟入DNN架構進行分析，因此這些輸入的像素已經丟失了原有的空間排列資訊。然而CNN的Convolution layer的目的就是在保留圖像的空間排列並取得局部圖像作為輸入特徵。  
 卷積運算就是將原始圖片的與特定的Feature Detector(filter)做卷積運算，卷積運算就是將下圖兩個3x3的矩陣作相乘後再相加，以下圖為例
 ![image](https://github.com/yahahaha/tensorflow/blob/master/img/Convolutional%20layer.PNG)
-0*0 + 0*0 + 0*1+ 0*1 + 1 *0 + 0*0 + 0*0 + 0*1 + 0*1 =0    
+0x0+0x0+0x1+0x1+1x0+0x0+0x0+0x1+0x1=0    
 依序做完整張表
 ![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E4%BE%9D%E5%BA%8F%E5%81%9A%E5%AE%8C%E6%95%B4%E5%BC%B5%E8%A1%A8.PNG)
 中間的Feature Detector(Filter)會隨機產生好幾種(ex:16種)，Feature Detector的目的就是幫助我們萃取出圖片當中的一些特徵(ex:形狀)，就像人的大腦在判斷這個圖片是什麼東西也是根據形狀來推測  
