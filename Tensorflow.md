@@ -308,10 +308,10 @@ a.減少參數或特徵或者是減少神經層數(其實就是在降低模型�
 b.在相同參數跟相同資料量的情況下，可以使用Regularization(正規化)  	
 c.在相同參數跟相同資料量的情況下，可以使用Dropout  
 
-	Regularization (正規化)
-		Weight decay(權重衰減)
-			Weight decay的意思就是對擁有較大權重的參數，課以罰金，藉此控制Overfitting的情況，因為Overfitting就是Weight 太大的時候可能會發生的問題。
-			Weight decay的方式就是在loss function (損失函數)加入參數權重的L2 norm，就可以抑制權重變大，公式:(L是loss function，也就是損失函數，做Weight decay就是在loss function上加上Weight的L2 norm)
+###Regularization (正規化)
+####Weight decay(權重衰減)
+Weight decay的意思就是對擁有較大權重的參數，課以罰金，藉此控制Overfitting的情況，因為Overfitting就是Weight 太大的時候可能會發生的問題。  
+Weight decay的方式就是在loss function (損失函數)加入參數權重的L2 norm，就可以抑制權重變大，公式:(L是loss function，也就是損失函數，做Weight decay就是在loss function上加上Weight的L2 norm)  
 
-	Dropout
-		在訓練的時候，隨機忽略掉一些神經元和神經聯結 ，使這個神經網絡變得”不完整”，然後用一個不完整的神經網絡訓練一次。到第二次再隨機忽略另一些, 變成另一個不完整的神經網絡。有了這些隨機drop掉的規則, 每一次預測結果都不會依賴於其中某部分特定的神經元。Dropout的方法就是一邊"隨機”消除神經元，一邊訓練的方法。
+###Dropout
+在訓練的時候，隨機忽略掉一些神經元和神經聯結 ，使這個神經網絡變得”不完整”，然後用一個不完整的神經網絡訓練一次。到第二次再隨機忽略另一些, 變成另一個不完整的神經網絡。有了這些隨機drop掉的規則, 每一次預測結果都不會依賴於其中某部分特定的神經元。Dropout的方法就是一邊"隨機”消除神經元，一邊訓練的方法。
