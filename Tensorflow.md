@@ -108,7 +108,7 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 2.在深度學習中，當隱藏層之層數過多時，激勵函數不可隨意選擇，因為會造成梯度消失(Vanishing Gradient)以及梯度爆炸(Exploding gradients)等問題。  
 常見的激勵函數的選擇有sigmoid，tanh，ReLU，實用上最常使用ReLU。
 
-##**例子-def add_layer()**
+## **例子-def add_layer()**
 	
 	import tensorflow as tf
 	import numpy as np
@@ -123,7 +123,7 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 			outputs=activation_function(Wx_plus_b)
 		return outputs
 
-##**建造神經網路+結果可視化**
+## **建造神經網路+結果可視化**
 		
 		#Make up some real data
 		x_data=np.linspace(-1,1,300)[:,np.newaxis]       #定義輸入資料，為一個值域在-1到+1之間的300個數據，為300*1的形式。numpy.linspace(start, stop, num=50)在指定區間內返回均勻間隔的數字，np.newaxis的功能是增加一個新的維度，ex:[1 2 3]透過[:,np.newaxis]->[[1][2][3]]，[1 2 3]透過[np.newaxis,:]->[[1 2 3]]
@@ -160,3 +160,24 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 				prediction_value=sess.run(prediction,feed_dict={xs:x_data})
 				lines=ax.plot(x_data,prediction_value,'r-',lw=5)	#紅色，寬度為5
 				plt.pause(0.1)	    #暫停0.1s
+
+## ***神經網路學習的優化(speed up training)**	
+### 梯度下降法(gradient descent，GD)
+梯度下降法是一種不斷去更新參數找「解」的方法，所以一定要先隨機產生一組初始參數的「解」，然後根據這組隨機產生的「解」開始算此「解」的梯度方向大小，然後將這個「解」去減去梯度方向，公式如下:  (t是第幾次更新參數，γ是學習率(Learning rate)，一次要更新多少，就是由學習率來控制的)  
+參考:https://medium.com/@chih.sheng.huang821/%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92-%E5%9F%BA%E7%A4%8E%E6%95%B8%E5%AD%B8-%E4%BA%8C-%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95-gradient-descent-406e1fd001f
+http://ruder.io/optimizing-gradient-descent/index.html#adam
+### 隨機梯度下降法(stochastic Gradient Descent,SGD)	
+在更新參數的時候，GD我們是一次用全部訓練集的數據去計算損失函數的梯度就更新一次參數。SGD就是一次跑一個樣本或是小批次(mini-batch)樣本然後算出一次梯度或是小批次梯度的平均後就更新一次，那這個樣本或是小批次的樣本是隨機抽取的，所以才會稱為隨機梯度下降法。  
+SGD缺點:在當下的問題如果學習率太大，容易造成參數更新呈現鋸齒狀的更新，這是很沒有效率的路徑。
+### Momentum
+公式: (t是第幾次更新參數，γ是學習率(Learning rate)，m是momentum項(一般設定為0.9))，主要是用在計算參數更新方向前會考慮前一次參數更新的方向(v(t-1))，如果當下梯度方向和歷史參數更新的方向一致，則會增強這個方向的梯度，若當下梯度方向和歷史參數更新的方向不一致，則梯度會衰退。然後每一次對梯度作方向微調。這樣可以增加學習上的穩定性(梯度不更新太快)，這樣可以學習的更快，並且有擺脫局部最佳解的能力。
+### AdaGrad
+SGD和momentum在更新參數時，都是用同一個學習率(γ)，Adagrad算法則是在學習過程中對學習率不斷的調整，這種技巧叫做「學習率衰減(Learning rate decay)」。通常在神經網路學習，一開始會用大的學習率，接著在變小的學習率。大的學習率可以較快走到最佳值或是跳出局部極值，但越後面到要找到極值就需要小的學習率。Adagrad則是針對每個參數客制化的值，這邊假設 g_t,i為第t次第i個參數的梯度，(ε是平滑項，主要避免分母為0的問題，一般設定為1e-7。Gt這邊定義是一個對角矩陣，對角線每一個元素是相對應每一個參數梯度的平方和。)  
+Adagrad缺點是在訓練中後段時，有可能因為分母累積越來越大(因為是從第1次梯度到第t次梯度的和)導致梯度趨近於0，如果有設定early stop的，會使得訓練提前結束。early stop:在訓練中計算模型的表現開始下降的時候就會停止訓練。
+### RMSProp
+RMSProp和Adagrad一樣是自適應的方法，但Adagrad的分母是從第1次梯度到第t次梯度的和，所以和可能過大，而RMSprop則是算對應的平均值，因此可以緩解Adagrad學習率下降過快的問題。  
+公式:E[]在統計上就是取期望值，所以是取g_i^2的期望值，白話說就是他的平均數。ρ是過去t-1時間的梯度平均數的權重，一般建議設成0.9。
+### Adam
+Momentum是「計算參數更新方向前會考慮前一次參數更新的方向」， RMSprop則是「在學習率上依據梯度的大小對學習率進行加強或是衰減」。Adam則是兩者合併加強版本(Momentum+RMSprop+各自做偏差的修正)。  
+mt和vt分別是梯度的一階動差函數和二階動差函數(非去中心化)。因為mt和vt初始設定是全為0的向量，Adam的作者發現算法偏量很容易區近於0，因此他們提出修正項，去消除這些偏量  
+Adam更新的準則: (adam2)(建議預設值β1=0.9, β2=0.999, ε=10^(-8)。)
