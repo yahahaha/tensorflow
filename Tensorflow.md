@@ -1,4 +1,4 @@
-## **什麼是tensorflow?**  
+## **什麼是Tensorflow?**  
 TensorFlow 是 Google透過使用資料流 (flow) 圖像，來進行數值演算的新一代開源機器學習工具。
 
 ## **Tensorflow安裝**  
@@ -46,3 +46,5 @@ c:\>pip install tensorflow
 		session.run(train)
 		if step%20==0:
 			print(step,sess.run(Weights),sess.run(biases))
+## **Session**
+Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和執行者之間的媒介，首先透過Session來啟動圖，而Session.run()是用來進行操作的，Session再使用完過後需要透過close來釋放資源，或是透過with as的方式來讓他自動釋放。
