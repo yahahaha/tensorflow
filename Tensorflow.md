@@ -250,3 +250,69 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/518746/
 	#存檔後開啟terminal，移動到檔案目錄後輸入tensorboard --logdir='logs/' 
 	複製網址，在網址列上貼上搜尋
 ```
+## **Classification分類學習**
+```python
+	import tensorflow as tf
+	from tensorflow.examples.tutorials.mnist import input_data   #mnist為一個手寫數字辨識資料的數據庫(有55000筆)
+	
+	#number 1 to 10 data
+	mnist=input_data.read_data_sets('MNIST_data',one_hot=True)   #One-hot encoding 是將類別以 (0, 1) 的方式表示，之所以用 One-hot encoding 的原因是，一般來說，我們在做 Classification 時，其資料的 label 是用文字代表一個類別，例如做動物的影像辨識，label 可能會是 cat、dog、bird 等，但是類神經網路皆是輸出數值，所以我們無法判斷 34 與 cat 的差別。因此，One-hot encoding 便是在做 Classification 經常使用的一個技巧。
+
+	def add_layer(inputs,in_size,out_size,activation_function=None):     
+		Weights=tf.Variable(tf.random_normal([in_size,out_size]))    
+		biases=tf.Variable(tf.zeros([1,out_size])+0.1)               
+		Wx_plus_b=tf.matmul(inputs,Weights)+biases		
+		if activation_function is None:				     
+			outputs=Wx_plus_b
+		else:
+			outputs=activation_function(Wx_plus_b)
+		return outputs
+
+	def compute_accuracy(v_xs,v_ys):
+		global prediction
+		y_pre=sess.run(prediction,feed_dict={xs:v_xs})
+		correct_prediction=tf.equal(tf.argmax(y_pre,1),tf.argmax(v_ys,1))   #判斷預測值與真實值是否一樣，correct_prediction 是一個 [True, False] 的陣列，再經由計算平均 (True=1，False=0)，就可以得到準確度 accuracy。
+		accuracy=tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
+		result=sess.run(accuracy,feed_dict={xs:v_xs,ys:v_ys})
+		return result
+
+	#define placeholder for inputs to network
+	xs=tf.placeholder(tf.float32,[None,784]) #每張圖的解析度是28x28，所以我們有28x28=784個像素資料		
+	ys=tf.placeholder(tf.float32,[None,10])	 #每張圖都代表一個數字，有0~9，所以有10種 	
+
+	#add output layer
+	prediction=add_layer(xs,784,10,activation_function=tf.nn.softmax)   #呼叫add_layer函式搭建一個訓練的網路結構，只有輸入層和輸出層。其中輸入資料是784個特徵，輸出資料是10個特徵，激勵採用softmax函式，Softmax 回歸是邏輯回歸 (Logistic Regression) 的推廣，邏輯回歸適用於二元分類的問題，而 Softmax 回歸適用於多分類的問題。
+
+	#the error between prediction and real data
+	cross_entropy=tf.reduce_mean(-tf.reduce_sum(ys*tf.log(prediction),reduction_indices=[1]))  #loss，所使用的損失函數是交叉熵(Cross Entropy)。交叉熵是評估兩個機率分配(distribution) 有多接近，如果兩著很接近，則交叉熵的結果趨近於 0；反之，如果兩個機率分配差距較大，則交叉熵的結果趨近於 1。
+	train_step=tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+	
+	sess=tf.Session()
+	sess.run(tf.initialize_all_variables())
+	
+	for i in range(1000):
+			batch_xs,batch_ys=mnist.train.next_batch(100)    #開始train，每次只取100張圖片，免得資料太多訓練太慢。
+			sess.run(train_step,feed_dict={xs:batch_xs,ys:batch_ys})
+			if i%50==0:     #每訓練50次輸出一下預測精度
+				print(compute_accuracy(mnist.test.images,mnist.test.labels))	
+```
+
+## **Overfitting**
+Overfitting顧名思義就是過度學習訓練資料，變得無法順利去預測或分辨不是在訓練資料內的其他資料。  
+有個方法可以偵測是否有Overfitting的情況發生:將所有的Training data坼成二部分，一個是Training Set跟Validate Set，Training Set就是真的把資料拿去訓練的，而Validate Set就是去驗證此Model在訓練資料外的資料是否可行。  
+造成Overfitting的原因與解決方式:  
+		1.訓練資料太少
+			取得更多的資料，這個方法就是收集更多的資料，或是自行生成更多的有效資料。
+
+		2.擁有太多的參數，功能太強的模型
+			a.減少參數或特徵或者是減少神經層數(其實就是在降低模型的大小，複雜的模型容易造成過度學習)
+			b.在相同參數跟相同資料量的情況下，可以使用Regularization(正規化)	
+			c.在相同參數跟相同資料量的情況下，可以使用Dropout
+
+	Regularization (正規化)
+		Weight decay(權重衰減)
+			Weight decay的意思就是對擁有較大權重的參數，課以罰金，藉此控制Overfitting的情況，因為Overfitting就是Weight 太大的時候可能會發生的問題。
+			Weight decay的方式就是在loss function (損失函數)加入參數權重的L2 norm，就可以抑制權重變大，公式:(L是loss function，也就是損失函數，做Weight decay就是在loss function上加上Weight的L2 norm)
+
+	Dropout
+		在訓練的時候，隨機忽略掉一些神經元和神經聯結 ，使這個神經網絡變得”不完整”，然後用一個不完整的神經網絡訓練一次。到第二次再隨機忽略另一些, 變成另一個不完整的神經網絡。有了這些隨機drop掉的規則, 每一次預測結果都不會依賴於其中某部分特定的神經元。Dropout的方法就是一邊"隨機”消除神經元，一邊訓練的方法。
