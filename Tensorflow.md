@@ -16,7 +16,7 @@ $pip3 install tensorflow
 c:\>pip install tensorflow  
 
 ## **tensorflow數據流圖**
-![image](img.gif)
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E6%95%B8%E6%B5%81%E5%9C%96.gif)
 
 ## **實例**
 	
