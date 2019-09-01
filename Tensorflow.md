@@ -17,3 +17,32 @@ c:\>pip install tensorflow
 
 ## **tensorflow數據流圖**
 ![image](img.gif)
+
+## **實例**
+	import tensorflow as tf
+	import numpy as np
+
+	#create data
+	x_data=np.random.rand(100).astype(np.float32)     #生成100個隨機數列，在tensorflow中大部分的數據的type是float32的形式
+	y_data=x_data*0.1+0.3
+
+	#create tensorflow structure start
+	Weights=tf.Variable(tf.random_uniform([1],-1.0,1.0))  #tf.random_uniform(結構,左範圍,右範圍)，初始值是-1~1的數
+	biases=tf.Variable(tf.zeros([1]))   #初始值是0
+
+	y=Weights*x_data+biases
+
+	loss=tf.reduce_mean(tf.square(y-y_data))   #誤差，預測的y和實際的y_data的差別
+	optimizer=tf.train.GradientDescentOptimizer(0.5)   #利用optimizer減少誤差，GradientDescentOptimizer(學習效率)，學習效率<1
+	train=optimizer.minimize(loss)
+
+	init=tf.initiallize_all_variables()    #初始化變量
+	#create tensorflow structure end
+
+	sess=tf.Session()
+	sess.run(init)         #very important
+
+	for step in range(201):
+		session.run(train)
+		if step%20==0:
+			print(step,sess.run(Weights),sess.run(biases))
