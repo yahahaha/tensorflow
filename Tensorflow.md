@@ -50,7 +50,7 @@ c:\>pip install tensorflow
 ```			
 ## **Session**
 Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和執行者之間的媒介，首先透過Session來啟動圖，而Session.run()是用來進行操作的，Session再使用完過後需要透過close來釋放資源，或是透過with as的方式來讓他自動釋放。
-	
+```python	
 	import tensorflow as tf
 
 	matrix1=tf.constant([[3,3]])         #Constant就是不可變的常數
@@ -67,12 +67,13 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 	with tf.Session() as sess:
 		result2= sess.run(product)
 		print(result2)
+```		
 ## **Variable**
 將值宣告賦值給變數（Variables）讓使用者能夠動態地進行相同的計算來得到不同的結果，在TensorFlow中是以tf.Variable()來完成。  
 在TensorFlow的觀念之中，宣告變數張量並不如Python那麼單純，它需要兩個步驟：  
 1.宣告變數張量的初始值、類型與外觀   
 2.初始化變數張量
-	
+```python	
 	import tensorflow as tf
 
 	state=tf.Variable(0,name='counter')
@@ -89,10 +90,10 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 		for _ in range(3):
 			sess.run(update)
 			print(sess.run(state))
-
+```
 ## **Placeholder**
 我們可以將它想成是一個佔有長度卻沒有初始值的None，差異在於None不需要將資料類型事先定義，但是Placeholder必須事先定義好之後要輸入的資料類型與外觀。
-	
+```python	
 	import tensorflow as tf
 
 	input1=tf.placeholder(tf.float32)    #先定義好之後要輸入的資料類型，tf.placeholder(dtype,shape=None,name=None)
@@ -102,7 +103,7 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 
 	with tf.Session() as sess:
 		print(sess.run(output,feed_dict={input1:[7.],input2:[2.]}))    #將資料以python dict餵進(feed)Placeholder之中，print出來的結果為[14.]
-
+```
 ## **激勵函數Activation Function**
 在類神經網路中使用激勵函數，主要是利用非線性方程式，解決非線性問題，若不使用激勵函數，類神經網路即是以線性的方式組合運算，因為隱藏層以及輸出層皆是將上層之結果輸入，並以線性組合計算，作為這一層的輸出，使得輸出與輸入只存在著線性關係，而現實中，所有問題皆屬於非線性問題，因此，若無使用非線性之激勵函數，則類神經網路訓練出之模型便失去意義。  
 1.激勵函數需選擇可微分之函數，因為在誤差反向傳遞(Back Propagation)運算時，需要進行一次微分計算。  
@@ -110,7 +111,7 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 常見的激勵函數的選擇有sigmoid，tanh，ReLU，實用上最常使用ReLU。
 
 ## **例子-def add_layer()**
-	
+```python	
 	import tensorflow as tf
 	import numpy as np
 	import matplotlib.pyplot as plt
@@ -123,9 +124,9 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 		else:
 			outputs=activation_function(Wx_plus_b)
 		return outputs
-
+```
 ## **建造神經網路+結果可視化**
-		
+```python		
 		#Make up some real data
 		x_data=np.linspace(-1,1,300)[:,np.newaxis]       #定義輸入資料，為一個值域在-1到+1之間的300個數據，為300*1的形式。numpy.linspace(start, stop, num=50)在指定區間內返回均勻間隔的數字，np.newaxis的功能是增加一個新的維度，ex:[1 2 3]透過[:,np.newaxis]->[[1][2][3]]，[1 2 3]透過[np.newaxis,:]->[[1 2 3]]
 		noise=np.random.normal(0,0.05,x_data.shape)      #然後定義一個與x_data形式一樣的噪音點，使得我們進行訓練的資料更像是真實的資料
@@ -161,7 +162,7 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 				prediction_value=sess.run(prediction,feed_dict={xs:x_data})
 				lines=ax.plot(x_data,prediction_value,'r-',lw=5)	#紅色，寬度為5
 				plt.pause(0.1)	    #暫停0.1s
-
+```
 ## **神經網路學習的優化(speed up training)**	
 ### 梯度下降法(gradient descent，GD)
 梯度下降法是一種不斷去更新參數找「解」的方法，所以一定要先隨機產生一組初始參數的「解」，然後根據這組隨機產生的「解」開始算此「解」的梯度方向大小，然後將這個「解」去減去梯度方向，公式如下:  (t是第幾次更新參數，γ是學習率(Learning rate)，一次要更新多少，就是由學習率來控制的)  
@@ -188,6 +189,7 @@ Adam更新的準則: (adam2)(建議預設值β1=0.9, β2=0.999, ε=10^(-8)。)
 https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/518746/
 
 ## **可視化**
+```python
 	import tensorflow as tf
 	import numpy as np
 	import matplotlib.pyplot as plt
@@ -247,3 +249,4 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/518746/
 				writer.add_summary(result,i)</font><br /> 	
 	存檔後開啟terminal，移動到檔案目錄後輸入tensorboard --logdir='logs/' 
 	複製網址，在網址列上貼上搜尋
+```
