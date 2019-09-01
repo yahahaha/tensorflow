@@ -183,7 +183,9 @@ RMSProp和Adagrad一樣是自適應的方法，但Adagrad的分母是從第1次�
 公式:i[image](https://github.com/yahahaha/tensorflow/blob/master/img/RMSProp.PNG)  
 E[]在統計上就是取期望值，所以是取g_i^2的期望值，白話說就是他的平均數。ρ是過去t-1時間的梯度平均數的權重，一般建議設成0.9。
 ### Adam
-Momentum是「計算參數更新方向前會考慮前一次參數更新的方向」， RMSprop則是「在學習率上依據梯度的大小對學習率進行加強或是衰減」。Adam則是兩者合併加強版本(Momentum+RMSprop+各自做偏差的修正)。  
+Momentum是「計算參數更新方向前會考慮前一次參數更新的方向」， RMSprop則是「在學習率上依據梯度的大小對學習率進行加強或是衰減」。Adam則是兩者合併加強版本(Momentum+RMSprop+各自做偏差的修正)。 
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/adam1.PNG)  
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/adam2.PNG)  
 mt和vt分別是梯度的一階動差函數和二階動差函數(非去中心化)。因為mt和vt初始設定是全為0的向量，Adam的作者發現算法偏量很容易區近於0，因此他們提出修正項，去消除這些偏量  
 Adam更新的準則: (adam2)(建議預設值β1=0.9, β2=0.999, ε=10^(-8)。)
 
