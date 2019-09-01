@@ -423,6 +423,7 @@ Full connected layer指的就是一般的神經網路，基本上全連接層的
 可以看出池化層減少了圖素的參數數量，卻保留了所有重要的特徵資訊，對於CNN的運作效率增進不少。
 
 ## **CNN實作**
+```python
 	from __future__ import print_function
 	import tensorflow as tf
 	from tensorflow.examples.tutorials.mnist import input_data
@@ -506,6 +507,6 @@ Full connected layer指的就是一般的神經網路，基本上全連接層的
 	    if i % 50 == 0:
 		print(compute_accuracy(
 		    mnist.test.images[:1000], mnist.test.labels[:1000]))
-
+```python
 
 
