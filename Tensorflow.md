@@ -409,7 +409,8 @@ Pooling layer稱為池化層，它的功能很單純，就是將輸入的圖片�
 2.具有抗干擾的作用：圖像中某些像素在鄰近區域有微小偏移或差異時，對Pooling layer的輸出影響不大，結果仍是不變的。  
 3.減少過度擬合over-fitting的情況。    
 與卷積層相同，池化層會使用Feature Detector(filter)來取出各區域的值並運算，但最後的輸出並不透過Activate function（卷積層使用的function是ReLU）。另外，池化層用來縮小圖像尺寸的作法主要有三種：最大化（Max-Pooling）、平均化（Mean-Pooling）、隨機（Stochastic-Pooling）…等，以Max-pooling為例，作法說明如下：
-
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/Pooling%20layer%20%E5%81%B6%E6%95%B8.PNG)
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/Pooling%20layer%20%E5%A5%87%E6%95%B8.PNG)
 ### Full connected layer
 Full connected layer指的就是一般的神經網路，基本上全連接層的部分就是將之前的結果平坦化之後接到最基本的神經網絡了。  
 可以看出池化層減少了圖素的參數數量，卻保留了所有重要的特徵資訊，對於CNN的運作效率增進不少。
