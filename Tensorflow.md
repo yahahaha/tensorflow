@@ -48,6 +48,7 @@ c:\>pip install tensorflow
 			print(step,sess.run(Weights),sess.run(biases))
 ## **Session**
 Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和執行者之間的媒介，首先透過Session來啟動圖，而Session.run()是用來進行操作的，Session再使用完過後需要透過close來釋放資源，或是透過with as的方式來讓他自動釋放。
+	
 	import tensorflow as tf
 
 	matrix1=tf.constant([[3,3]])         #Constant就是不可變的常數
@@ -64,3 +65,8 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 	with tf.Session() as sess:
 		result2= sess.run(product)
 		print(result2)
+## **Variable**
+將值宣告賦值給變數（Variables）讓使用者能夠動態地進行相同的計算來得到不同的結果，在TensorFlow中是以tf.Variable()來完成。  
+在TensorFlow的觀念之中，宣告變數張量並不如Python那麼單純，它需要兩個步驟：
+1.宣告變數張量的初始值、類型與外觀 
+2.初始化變數張量
