@@ -190,7 +190,7 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/518746/
 	import tensorflow as tf
 	import numpy as np
 	import matplotlib.pyplot as plt
-	<font color="#dd0000">def add_layer(inputs,in_size,out_size,n_layer,activation_function=None):</font><br />      
+	<font color="#dd0000">def add_layer(inputs,in_size,out_size,n_layer,activation_function=None):    
 		layer_name='layer%s'%n_layer
 		with tf.name_scope(layer_name):
 			with tf.name_scope('weight'):
@@ -199,7 +199,7 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/518746/
 			with tf.name_scope('biases'):
 				biases=tf.Variable(tf.zeros([1,out_size])+0.1,name='b')               
 				tf.histogram_summary(layer_name+'/biases',biases)
-			with tf.name_scope('Wx_plus_b'):</font><br /> 
+			with tf.name_scope('Wx_plus_b'):</font>
 				Wx_plus_b=tf.matmul(inputs,Weights)+biases		
 			if activation_function is None:				     
 				outputs=Wx_plus_b
