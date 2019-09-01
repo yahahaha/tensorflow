@@ -19,6 +19,7 @@ c:\>pip install tensorflow
 ![image](img.gif)
 
 ## **實例**
+	
 	import tensorflow as tf
 	import numpy as np
 
@@ -121,3 +122,41 @@ Tensorflow是基於圖架構進行運算的深度學習框架，Session是圖和
 		else:
 			outputs=activation_function(Wx_plus_b)
 		return outputs
+
+##**建造神經網路+結果可視化**
+		
+		#Make up some real data
+		x_data=np.linspace(-1,1,300)[:,np.newaxis]       #定義輸入資料，為一個值域在-1到+1之間的300個數據，為300*1的形式。numpy.linspace(start, stop, num=50)在指定區間內返回均勻間隔的數字，np.newaxis的功能是增加一個新的維度，ex:[1 2 3]透過[:,np.newaxis]->[[1][2][3]]，[1 2 3]透過[np.newaxis,:]->[[1 2 3]]
+		noise=np.random.normal(0,0.05,x_data.shape)      #然後定義一個與x_data形式一樣的噪音點，使得我們進行訓練的資料更像是真實的資料
+		y_data=np.squre(x_data)-0.5+noise		 #定義y_data,假設為x_data的平方減去噪音點
+
+		#define placeholder for inputs to network
+		xs=tf.placeholder(tf.float32,[None,1])           #定義placeholder, 引數中none表示輸入多少個樣本都可以，x_data的屬性為1，所以輸出也為1
+		ys=tf.placeholder(tf.float32,[None,1])
+		l1=add_layer(x_data,1,10,activation_function=tf.nn.relu)    #我們定義一個簡單的神經網路，輸入層->隱藏層->輸出層，隱藏層我們假設只給10個神經元，輸入層是有多少個屬性就有多少個神經元，我們的x_data只有一個屬性，所以只有一個神經元，輸出層與輸入層是一樣的，輸入層有多少個神經元輸出層就有多少個。
+		prediction=add_layer(l1,10,1,activation_function=None)	    #l1=add_layer(x_data,輸入層,隱藏層,activation_function=tf.nn.relu)，prediction=add_layer(l1,隱藏層,輸出層,activation_function=None)
+
+		loss=tf.reduce_mean(tf.reduce_sum(tf.square(y_data-prediction),reduction_indices=[1]))    #計算預測值與真實值的差異
+		train_step=tf.train.GradientDescentOptimizer(0.1).minimize(loss)
+
+		init=tf.initialize_all_variables()
+		sess=tf.Session()
+		sess.run(init)
+		
+		fig=plt.figure()            #figure(num=None, figsize=None, dpi=None, facecolor=None, edgecolor=None, frameon=True)，figure(圖的名稱,圖的大小ex=(4,3),參數指定繪圖對象的分辨率(即每英吋有多少個像素),背景顏色,邊框顏色,是否顯示邊框)
+		ax=fig.add_subplot(1,1,1)   #add_subplot(1,1,1)表示1x1的網格，第1個子圖，add_subplot(A,B,C)表示AxB的網格，第C個子圖。
+		ax.scatter(x_data,y_data)   #ax.scatter(x, y, z, c = 'r', marker = '^')表示產生散點圖，c表示顏色，marker表示點的形式(o是圓形的點，^是三角形)
+		plt.ion()   #開啟交互模式->連續顯示圖，plt.ioff()->關閉交互模式
+		plt.show()
+
+		for i in range(1000):
+			sess.run(train_step,feed_dict={xs:x_data,ys:y_data})
+			if i%50==0:
+				print(sess.run(loss,feed_dict={xs:x_data,ys:y_data}))
+				try:
+					ax.lines.remove(lines[0])
+				except Exception:
+					pass
+				prediction_value=sess.run(prediction,feed_dict={xs:x_data})
+				lines=ax.plot(x_data,prediction_value,'r-',lw=5)	#紅色，寬度為5
+				plt.pause(0.1)	    #暫停0.1s
