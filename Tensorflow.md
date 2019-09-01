@@ -396,7 +396,8 @@ Weight decay的方式就是在loss function (損失函數)加入參數權重的L
 卷積運算就是將原始圖片的與特定的Feature Detector(filter)做卷積運算，卷積運算就是將下圖兩個3x3的矩陣作相乘後再相加，以下圖為例 
 0*0 + 0*0 + 0*1+ 0*1 + 1 *0 + 0*0 + 0*0 + 0*1 + 0*1 =0    
 依序做完整張表  	
-中間的Feature Detector(Filter)會隨機產生好幾種(ex:16種)，Feature Detector的目的就是幫助我們萃取出圖片當中的一些特徵(ex:形狀)，就像人的大腦在判斷這個圖片是什麼東西也是根據形狀來推測     
+中間的Feature Detector(Filter)會隨機產生好幾種(ex:16種)，Feature Detector的目的就是幫助我們萃取出圖片當中的一些特徵(ex:形狀)，就像人的大腦在判斷這個圖片是什麼東西也是根據形狀來推測  
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/16%E7%A8%AE%E4%B8%8D%E5%90%8C%E7%9A%84Feature%20Detector.PNG)
 然而如果我們輸入的是三層的RGB圖像而非單層的灰階呢？或是想要使用多個Feature Detector(filter)來取得不同的特徵，那麼就需要在同一卷積層中定義多個Feature Detector(filter)，此時Feature Detector(filter)的數量就代表其Feature Detector(filter)的維度。當Feature Detector(filter)維度愈大，代表使用的Feature Detector(filter)種類愈多提取的圖像特徵也就越多，圖像識別的能力也就更好。  
 	
 ### Pooling Layer 池化層
