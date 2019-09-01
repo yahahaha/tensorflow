@@ -1,3 +1,3 @@
 # tensorflow
 study tensorflow
-![image]（https://github.com/yahahaha/tensorflow/blob/master/img.gif）
+![image]（http://github.com/yahahaha/tensorflow/blob/master/img.gif）
