@@ -9,3 +9,21 @@ Keras可以使用最少的程式碼，花費最少的時間，就可以建立深
 $pip install keras  
 #如果是python3.X  
 $pip3 install keras  
+
+## **Backend後端**
+就是Keras是基於甚麼來做運算，主要有兩個Tensorflow和Theano
+### 如何知道自己用的是甚麼backend
+import keras
+### 如何更改backend
+#### Method1
+打開terminal  
+輸入~/.keras/keras.json  
+將文件內容重新貼上以下內容
+{
+"image_dim_ordering": "tf",
+"epsilon": 1e-07,
+"floatx": "float32",
+"backend": "tensorflow"
+}  
+不能直接更改，要整段內容在編輯器事先複製下來再貼上。
+#### Method2
