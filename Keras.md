@@ -5,9 +5,7 @@ Keras可以使用最少的程式碼，花費最少的時間，就可以建立深
 ## **Keras安裝**
 首先確認已安裝了Numpy和Scipy
 叫出terminal
-	
-如果是python2.X
-輸入 pip install keras
-
-如果是python3.X
-輸入 pip3 install keras
+#如果是python2.X
+$pip install keras
+#如果是python3.X
+$pip3 install keras
