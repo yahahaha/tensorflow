@@ -19,11 +19,18 @@ import keras
 打開terminal  
 輸入~/.keras/keras.json  
 將文件內容重新貼上以下內容
+    
     {
     "image_dim_ordering": "tf",
     "epsilon": 1e-07,
     "floatx": "float32",
     "backend": "tensorflow"
     }  
+    
 不能直接更改，要整段內容在編輯器事先複製下來再貼上。
 #### Method2
+在每次開始前先輸入  	
+        
+        import os
+        os.environ['KERAS_BACKEND']='theano'
+
