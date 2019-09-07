@@ -196,6 +196,7 @@ Define Network(定義) -> Compile Network(編譯) ->Fit Network(訓練) -> Evalu
 現在已大量運用在自然語言理解 (例如語音轉文字，翻譯，產生手寫文字)，圖像與影像辨識等應用。
 ### 圖解長短期記憶模型 (LSTM)
 我們可以將遞迴神經網路想像成相似的單元，不斷地將過往資訊往下傳遞，所以我們可以用過往的資料來預測或瞭解現在的現象。這樣的鏈結可以透過下圖來表示：  
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM).png)
 
 X 代表輸入的資料，h 為輸出，昨天預測的結果可作爲今天預測的資料，形成一條長鏈。  
 		
