@@ -205,15 +205,15 @@ LSTMs 也是由不斷重複的單元彼此相連所構成，但內部的單元�
 ![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)3.png)
 在討論那四層的單元如何互相影響之前，先介紹 LSTMs 最為核心的一個概念：透過閘門來做調控。下圖由左至右的水平線用來表示單元狀態 (cell state)，可以將它想像成是一個貫穿所有單元的一條道路，將資訊從一個單元帶到下一個單元 ，  
 ![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)4.png)
-[image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)5.png)
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)5.png)
 所以第一步是，決定哪些資訊要忘掉，透過這個黃色的邏輯函數我們可以決定從上一層的輸出帶進來的資訊，以及這一層新增加的資訊，有多少比例要被忘掉，不被帶進下一層。  
-[image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)6.png)
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)6.png)
 下一步是將新帶進來的資料紀錄到主要的單元狀態中。這邊又分成兩步驟：決定什麼要被記錄下來，以及更新我們的主要單元。  
-[image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)7.png)
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)7.png)
 這個第二步驟用來解釋主要單元被更新，從數學公式可以看出，這邊也考慮了上一個遺忘步驟的結果 ft  
-[image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)8.png)		
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)8.png)		
 最後，我們決定有多少資訊要被輸出。從上一步驟的結果 Ct，再透過邏輯函數以及 tanh 的調控，來決定主要單元上要被輸出，用作明天預測的資料是什麼。  
-[image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)9.png)
+![image](https://github.com/yahahaha/tensorflow/blob/master/img/%E5%9C%96%E8%A7%A3%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B%20(LSTM)9.png)
 
 參考資料:https://medium.com/@tengyuanchang/%E6%B7%BA%E8%AB%87%E9%81%9E%E6%AD%B8%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF-rnn-%E8%88%87%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6%E6%A8%A1%E5%9E%8B-lstm-300cbe5efcc3
 
